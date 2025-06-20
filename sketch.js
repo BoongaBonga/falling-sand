@@ -122,6 +122,7 @@ document.addEventListener("mousedown", () => {
     mouse1 = true;
   }
 });
+
 document.addEventListener("mouseup", () => {
   mouse1 = false;
 });
