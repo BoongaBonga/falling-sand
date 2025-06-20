@@ -9,6 +9,7 @@ function createMatrix(cols2, rows2) {
   return arr;
 }
 let hue = 0;
+let brushSize = 5;
 const cols = 50;
 const rows = 50;
 let delay = 20;
@@ -45,7 +46,20 @@ function draw() {
 
   if (mouse1 == true) {
     if (!document.querySelector("#usr-chk").checked) {
-      arr[mouseCol][mouseRow] = document.getElementById("usr-clr").value * 3.6;
+      //arr[mouseCol][mouseRow] = document.getElementById("usr-clr").value * 3.6;
+      let matrix = brushSize;
+      let extent = floor(matrix / 2);
+      for (let i = -extent; i <= extent; i++) {
+        for (let j = -extent; j <= extent; j++) {
+          if (random(1) < 0.75) {
+            let col = mouseCol + i;
+            let row = mouseRow + j;
+            if (withinCols(col) && withinRows(row)) {
+              arr[col][row] = document.getElementById("usr-clr").value * 3.6;
+            }
+          }
+        }
+      }
     } else {
       arr[mouseCol][mouseRow] = 400;
     }
@@ -132,4 +146,15 @@ function fpsChange() {
   window.clearInterval(updateLoop);
   delay = Math.abs(document.getElementById("fpsSlider").value - 100);
   startLoop();
+}
+function brushChange() {
+  brushSize = document.getElementById("brushSlider").value / 10;
+}
+
+//test
+function withinCols(i) {
+  return i >= 0 && i <= cols - 1;
+}
+function withinRows(j) {
+  return j >= 0 && j <= rows - 1;
 }
