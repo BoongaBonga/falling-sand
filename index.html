@@ -12,7 +12,11 @@
     <script src="libraries/p5.sound.min.js"></script>
   </head>
 
-  <body>
+  <body onload="startLoop()">
+    <div style="position: absolute; right: 0">
+      <input type="range" id="fpsSlider" onchange="fpsChange()" />
+      <p id="fpsText">frames per second</p>
+    </div>
     <button onclick="reset()">reset</button>
     <input type="range" id="usr-clr" />
     <p>set slider to pick color (0=delete)</p>

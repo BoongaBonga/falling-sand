@@ -55,58 +55,62 @@ function draw() {
   text(`X: ${mouseCol}, Y: ${mouseRow}`, 0, 10);
 }
 
-window.setInterval(() => {
-  //create a new arr every 50 ms
-  let nextArr = createMatrix(cols, rows);
-  //cycle through all positions
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      //if you have sand and no rock
-      if (arr[i][j] > 0 && arr[i][j] !== 400) {
-        //get random number for falling left or right
-        let randInt = 1;
-        if (Math.random() > 0.5) {
-          randInt *= -1;
-        }
-        //if there is sand below
-        if (arr[i][j + 1] > 0) {
-          //if at edge, stay
-          if (i == 0 || i == cols - 1) {
-            nextArr[i][j] = arr[i][j];
-          } else if (arr[i - 1][j + 1] > 0) {
-            //if down left is sand, try right
-            if (arr[i + 1][j + 1] > 0) {
-              //if down right is also sand, stay
+//update pixels function
+let updateLoop;
+function startLoop() {
+  updateLoop = window.setInterval(() => {
+    //create a new arr every 50 ms
+    let nextArr = createMatrix(cols, rows);
+    //cycle through all positions
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        //if you have sand and no rock
+        if (arr[i][j] > 0 && arr[i][j] !== 400) {
+          //get random number for falling left or right
+          let randInt = 1;
+          if (Math.random() > 0.5) {
+            randInt *= -1;
+          }
+          //if there is sand below
+          if (arr[i][j + 1] > 0) {
+            //if at edge, stay
+            if (i == 0 || i == cols - 1) {
               nextArr[i][j] = arr[i][j];
+            } else if (arr[i - 1][j + 1] > 0) {
+              //if down left is sand, try right
+              if (arr[i + 1][j + 1] > 0) {
+                //if down right is also sand, stay
+                nextArr[i][j] = arr[i][j];
+              } else {
+                //if down right is no sand, fall right
+                nextArr[i + 1][j + 1] = arr[i][j];
+              }
             } else {
-              //if down right is no sand, fall right
-              nextArr[i + 1][j + 1] = arr[i][j];
+              //if down left is no sand, check right
+              if (arr[i + 1][j + 1] == 0) {
+                //if they're both sand, choose random dir
+                nextArr[i + randInt][j + 1] = arr[i][j];
+              } else {
+                nextArr[i - 1][j + 1] = arr[i][j];
+              }
             }
           } else {
-            //if down left is no sand, check right
-            if (arr[i + 1][j + 1] == 0) {
-              //if they're both sand, choose random dir
-              nextArr[i + randInt][j + 1] = arr[i][j];
-            } else {
-              nextArr[i - 1][j + 1] = arr[i][j];
-            }
+            //if not, fall
+            nextArr[i][j + 1] = arr[i][j];
           }
-        } else {
-          //if not, fall
-          nextArr[i][j + 1] = arr[i][j];
-        }
-        //if you're at the bottom, stay
-        if (j == rows - 1) {
+          //if you're at the bottom, stay
+          if (j == rows - 1) {
+            nextArr[i][j] = arr[i][j];
+          }
+        } else if (arr[i][j] == 400) {
+          //if rock
           nextArr[i][j] = arr[i][j];
         }
-      } else if (arr[i][j] == 400) {
-        //if rock
-        nextArr[i][j] = arr[i][j];
       }
     }
-  }
-  arr = nextArr;
-}, delay);
+    arr = nextArr;
+  }, delay);
+}
 
 function reset() {
   arr = createMatrix(cols, rows);
@@ -114,10 +118,7 @@ function reset() {
 //register presses
 let mouse1;
 document.addEventListener("mousedown", () => {
-  if (
-    document.querySelector("#usr-clr:hover") === null &&
-    document.querySelector("#usr-chk:hover") === null
-  ) {
+  if (document.querySelector("input:hover") === null) {
     mouse1 = true;
   }
 });
@@ -125,3 +126,9 @@ document.addEventListener("mouseup", () => {
   mouse1 = false;
 });
 //color stuff
+//change fps
+function fpsChange() {
+  window.clearInterval(updateLoop);
+  delay = Math.abs(document.getElementById("fpsSlider").value - 100);
+  startLoop();
+}
