@@ -11,7 +11,7 @@ function createMatrix(cols2, rows2) {
 let hue = 0;
 const cols = 50;
 const rows = 50;
-let delay = 50;
+let delay = 20;
 let arr = createMatrix(cols, rows);
 function setup() {
   createCanvas(400, 400);
@@ -44,7 +44,11 @@ function draw() {
   }
 
   if (mouse1 == true) {
-    arr[mouseCol][mouseRow] = document.getElementById("usr-clr").value * 3.6;
+    if (!document.querySelector("#usr-chk").checked) {
+      arr[mouseCol][mouseRow] = document.getElementById("usr-clr").value * 3.6;
+    } else {
+      arr[mouseCol][mouseRow] = 400;
+    }
   }
   //coords
   fill("white");
@@ -57,8 +61,8 @@ window.setInterval(() => {
   //cycle through all positions
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      //if you have sand
-      if (arr[i][j] > 0) {
+      //if you have sand and no rock
+      if (arr[i][j] > 0 && arr[i][j] !== 400) {
         //get random number for falling left or right
         let randInt = 1;
         if (Math.random() > 0.5) {
@@ -95,6 +99,9 @@ window.setInterval(() => {
         if (j == rows - 1) {
           nextArr[i][j] = arr[i][j];
         }
+      } else if (arr[i][j] == 400) {
+        //if rock
+        nextArr[i][j] = arr[i][j];
       }
     }
   }
@@ -107,7 +114,10 @@ function reset() {
 //register presses
 let mouse1;
 document.addEventListener("mousedown", () => {
-  if (document.querySelector("#usr-clr:hover") === null) {
+  if (
+    document.querySelector("#usr-clr:hover") === null &&
+    document.querySelector("#usr-chk:hover") === null
+  ) {
     mouse1 = true;
   }
 });
