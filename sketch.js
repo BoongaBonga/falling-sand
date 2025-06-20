@@ -37,14 +37,15 @@ function draw() {
   mouseRow = Math.max(Math.min(Math.floor(mouseY / squareSize), rows - 1), 0);
   fill("gray");
   square(mouseCol * squareSize, mouseRow * squareSize, squareSize);
+
   hue += 1;
   if (hue == 360) {
     hue = 0;
   }
-  if (mouseIsPressed) {
-    arr[mouseCol][mouseRow] = hue;
-  }
 
+  if (mouse1 == true) {
+    arr[mouseCol][mouseRow] = document.getElementById("usr-clr").value * 3.6;
+  }
   //coords
   fill("white");
   text(`X: ${mouseCol}, Y: ${mouseRow}`, 0, 10);
@@ -103,3 +104,14 @@ window.setInterval(() => {
 function reset() {
   arr = createMatrix(cols, rows);
 }
+//register presses
+let mouse1;
+document.addEventListener("mousedown", () => {
+  if (document.querySelector("#usr-clr:hover") === null) {
+    mouse1 = true;
+  }
+});
+document.addEventListener("mouseup", () => {
+  mouse1 = false;
+});
+//color stuff
