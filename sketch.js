@@ -140,6 +140,18 @@ document.addEventListener("mousedown", () => {
 document.addEventListener("mouseup", () => {
   mouse1 = false;
 });
+
+//for mobile
+document.addEventListener("touchstart", () => {
+  if (document.querySelector("input:hover") === null) {
+    mouse1 = true;
+  }
+});
+
+document.addEventListener("touchend", () => {
+  mouse1 = false;
+});
+
 //color stuff
 //change fps
 function fpsChange() {
