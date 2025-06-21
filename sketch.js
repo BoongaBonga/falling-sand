@@ -55,7 +55,11 @@ function draw() {
             let col = mouseCol + i;
             let row = mouseRow + j;
             if (withinCols(col) && withinRows(row)) {
-              arr[col][row] = document.getElementById("usr-clr").value * 3.6;
+              if (document.getElementById("rainbow").checked) {
+                arr[col][row] = hue;
+              } else {
+                arr[col][row] = document.getElementById("usr-clr").value * 3.6;
+              }
             }
           }
         }
