@@ -41,7 +41,7 @@ function draw() {
 
   hue += 1;
   if (hue == 360) {
-    hue = 0;
+    hue = 1;
   }
 
   if (mouse1 == true) {
